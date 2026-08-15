@@ -272,12 +272,8 @@ export default function App() {
             style={{ fontSize: "0.85rem", border: "1px solid #00d2ff", color: "#00d2ff" }}
             onClick={() => setShowTestModal(true)}
           >
-            🧪 20 Test Cases Validation
-          </button>
-          <button
-            className={`btn ${activeTab === "patient" ? "primary-btn" : "secondary-btn"}`}
-            onClick={() => setActiveTab("patient")}
-          >
+           
+          
             👤 Patient View
           </button>
           <button
