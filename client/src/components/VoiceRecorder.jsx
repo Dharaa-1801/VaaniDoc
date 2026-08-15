@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { TRANSLATIONS } from '../utils/translations';
 
 export default function VoiceRecorder({ onRecordingComplete, language }) {
   const [isRecording, setIsRecording] = useState(false);
@@ -8,6 +9,8 @@ export default function VoiceRecorder({ onRecordingComplete, language }) {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const timerIntervalRef = useRef(null);
+
+  const t = TRANSLATIONS[language] || TRANSLATIONS['en-IN'];
 
   useEffect(() => {
     return () => {
@@ -45,7 +48,7 @@ export default function VoiceRecorder({ onRecordingComplete, language }) {
 
     } catch (err) {
       console.error('Microphone error:', err);
-      setErrorMsg('Microphone access denied. Please allow microphone permissions or use typing mode.');
+      setErrorMsg(t.micError);
     }
   };
 
@@ -72,27 +75,27 @@ export default function VoiceRecorder({ onRecordingComplete, language }) {
           <button
             onClick={startRecording}
             className="mic-button idle"
-            aria-label="Start Voice Recording"
+            aria-label={t.speakBtnText}
           >
             <span className="mic-icon">🎤</span>
-            <span className="mic-text">Speak in your language</span>
+            <span className="mic-text">{t.speakBtnText}</span>
           </button>
         ) : (
           <button
             onClick={stopRecording}
             className="mic-button recording"
-            aria-label="Stop Voice Recording"
+            aria-label={t.stopBtnText}
           >
             <span className="recording-pulse"></span>
             <span className="mic-icon">⏹️</span>
-            <span className="mic-text">Stop Recording ({formatTime(recordingTime)})</span>
+            <span className="mic-text">{t.stopBtnText} ({formatTime(recordingTime)})</span>
           </button>
         )}
       </div>
 
       {isRecording && (
         <div className="recording-status">
-          🔴 Recording active... Tell your doctor how you are feeling.
+          {t.recordingActive}
         </div>
       )}
     </div>
