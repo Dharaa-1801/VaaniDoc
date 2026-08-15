@@ -221,6 +221,92 @@ export default function App() {
     return 'Not Specified';
   };
 
+  // 💊 Evidence-Based First-Line Medication Suggestions (For Doctor Clinical Reference)
+  const getSuggestedMedicines = (symptoms, isUrgent, combinedText) => {
+    if (isUrgent || combinedText.includes("chest pain") || combinedText.includes("shortness of breath") || combinedText.includes("seizure") || combinedText.includes("loss of consciousness")) {
+      return [
+        "🚨 Emergency Protocol: Immediate in-person clinical assessment required",
+        "Oxygen supplementation & Continuous Vital Signs monitoring",
+        "Avoid self-medication — Proceed to Emergency Department / ICU"
+      ];
+    }
+
+    const meds = [];
+    const lower = combinedText.toLowerCase();
+
+    // Fever & Body Pain
+    if (symptoms.includes("Fever") || symptoms.includes("Body Aches") || symptoms.includes("Headache") || lower.includes("fever") || lower.includes("તાવ") || lower.includes("बुखार")) {
+      meds.push("Tab. Paracetamol (500mg / 650mg) - SOS for fever/pain (Max 3-4 times daily)");
+    }
+
+    // Cold & Rhinitis
+    if (symptoms.includes("Cold & Runny Nose") || symptoms.includes("Skin Rash & Itching") || lower.includes("cold") || lower.includes("sardi") || lower.includes("zukam") || lower.includes("શરદી")) {
+      meds.push("Tab. Cetirizine (10mg) / Levocetirizine (5mg) - Once daily at bedtime");
+    }
+
+    // Cough
+    if (symptoms.includes("Cough") || lower.includes("cough") || lower.includes("khansi") || lower.includes("ઉધરસ")) {
+      meds.push("Syrup Dextromethorphan (Dry Cough) OR Syrup Ambroxol + Guaifenesin (Wet Cough) - 10ml thrice daily");
+    }
+
+    // Sore Throat
+    if (symptoms.includes("Sore Throat") || lower.includes("throat") || lower.includes("gale") || lower.includes("ગળા")) {
+      meds.push("Warm Saline Gargles (3-4 times/day) + Antiseptic Throat Lozenges");
+    }
+
+    // Acidity & Reflux
+    if (symptoms.includes("Acidity & Heartburn") || lower.includes("acidity") || lower.includes("gas") || lower.includes("heartburn") || lower.includes("બળતરા")) {
+      meds.push("Cap. Pantoprazole (40mg) / Omeprazole (20mg) - Once daily before breakfast (Empty stomach)");
+    }
+
+    // Stomach Pain
+    if (symptoms.includes("Stomach Pain") || symptoms.includes("Severe Stomach Pain") || lower.includes("stomach pain") || lower.includes("pet")) {
+      meds.push("Tab. Dicyclomine + Paracetamol (for spasmodic stomach cramps) + Light Bland Diet");
+    }
+
+    // Vomiting & Nausea
+    if (symptoms.includes("Vomiting & Nausea") || lower.includes("vomiting") || lower.includes("ulti") || lower.includes("ઉલટી")) {
+      meds.push("Tab. Ondansetron (4mg) / Domperidone (10mg) - 30 mins before food");
+    }
+
+    // Diarrhea
+    if (symptoms.includes("Loose Motions / Diarrhea") || lower.includes("diarrhea") || lower.includes("zhada") || lower.includes("ઝાડા") || lower.includes("दस्त")) {
+      meds.push("ORS (Oral Rehydration Salts) Solution in boiled water + Zinc (20mg) / Probiotic capsule");
+    }
+
+    // Constipation
+    if (symptoms.includes("Constipation") || lower.includes("constipation") || lower.includes("kabjiyat") || lower.includes("કબજિયાત")) {
+      meds.push("Syrup Lactulose (15ml at night) OR Isabgol (1-2 tsp in warm water) + High Fiber Diet");
+    }
+
+    // Musculoskeletal / Joint Pain
+    if (symptoms.includes("Knee Pain") || symptoms.includes("Back Pain") || symptoms.includes("Joint Pain") || symptoms.includes("Neck Pain") || lower.includes("joint") || lower.includes("kamar") || lower.includes("ghuntan")) {
+      meds.push("Diclofenac / Volini Topical Gel application (2-3 times daily) + Warm Compresses");
+    }
+
+    // Burning Urination (UTI)
+    if (symptoms.includes("Burning Urination (UTI)") || lower.includes("peshab") || lower.includes("પેશાબ") || lower.includes("burning urination")) {
+      meds.push("Syrup Disodium Hydrogen Citrate (Alkamac) 2 tsp in water + High Fluid Intake (3-4L/day)");
+    }
+
+    // Toothache
+    if (symptoms.includes("Toothache") || lower.includes("tooth") || lower.includes("daant") || lower.includes("દાંત")) {
+      meds.push("Tab. Ketorolac / Ibuprofen for acute dental ache + Warm Salt Water Rinses + Dentist evaluation");
+    }
+
+    // Eye Pain / Redness
+    if (symptoms.includes("Eye Pain & Redness") || lower.includes("eye") || lower.includes("aankh") || lower.includes("આંખ")) {
+      meds.push("Carboxymethylcellulose (0.5%) Lubricant Eye Drops (1 drop 3-4 times daily)");
+    }
+
+    if (meds.length === 0) {
+      meds.push("Adequate Oral Hydration & Rest");
+      meds.push("Symptomatic Relief as per Doctor Physical Examination");
+    }
+
+    return Array.from(new Set(meds));
+  };
+
   // 🩺 Comprehensive Patient Syndromes & Urgency Classification Engine
   const extractClinicalSyndromes = (translatedEn, rawText) => {
     const combined = `${rawText} ${translatedEn}`.toLowerCase();
@@ -269,7 +355,7 @@ export default function App() {
       symptoms.push("Cold & Runny Nose");
       if (specialty === "General Physician") specialty = "ENT";
     }
-    if (/sore\s*throat|throat\s*pain|throat\s*infection|tonsil|gale\s*me\s*dard|ગળામાં\s*દુખાવો|ગળામાં\s*ખરાશ|ગળું|गले\s*में\s*दर्द|गले\s*में\s*खराश|घसा\s*दुखणे/i.test(combined)) {
+    if (/sore\s*throat|throat\s*pain|throat\s*infection|tonsil|gale\s*me\s*dard|ગળામાં\s*દુખાવો|ગળામાં\s*ખરાશ|ગળું|गले\s*में\s*दर्द|गले\s*में\s*ખરાશ|घसा\s*दुखणे/i.test(combined)) {
       symptoms.push("Sore Throat");
       if (specialty === "General Physician") specialty = "ENT";
     }
@@ -286,7 +372,6 @@ export default function App() {
     // --- 3. INFECTIOUS & FEVER / FLU ---
     if (/high\s*fever|fever|feverish|temperature|bukhar|taap|તાવ|ગરમી|ताप|बुखार/i.test(combined)) {
       symptoms.push("Fever");
-      if (specialty === "General Physician") specialty = "General Physician";
     }
     if (/chills|shivering|feeling\s*cold|thandi|kampari|ઠંડી\s*લાગવી|કંપારી|ઠંડી|कपकपी|ठंड\s*लगना|थंडी/i.test(combined)) {
       symptoms.push("Chills & Shivering");
@@ -479,10 +564,14 @@ export default function App() {
       };
     }
 
+    // Generate Evidence-Based Medication Considerations
+    const suggestedMedicines = getSuggestedMedicines(symptoms, isUrgent, combined);
+
     return {
       symptoms: Array.from(new Set(symptoms)),
       specialty,
-      urgency
+      urgency,
+      suggestedMedicines
     };
   };
 
@@ -512,6 +601,7 @@ export default function App() {
       extractedSymptoms: clinicalAnalysis.symptoms,
       urgency: clinicalAnalysis.urgency,
       category: clinicalAnalysis.specialty,
+      suggestedMedicines: clinicalAnalysis.suggestedMedicines,
       duration: dynamicDuration,
       timestamp: new Date().toLocaleTimeString(),
     };
@@ -622,10 +712,31 @@ export default function App() {
                 </span>
               </div>
 
-              <div className="specialty-box">
-                <small>Suggested Specialty</small>
-                <div className="specialty-value">
-                  {clinicalForm.category}
+              {/* Specialty & First-Line Care Box */}
+              <div className="specialty-med-container">
+                <div className="specialty-card">
+                  <small>Suggested Specialty</small>
+                  <div className="specialty-value">
+                    {clinicalForm.category}
+                  </div>
+                </div>
+
+                <div className="medicine-card">
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                    <small style={{ fontWeight: "700", color: "var(--text-secondary)" }}>
+                      💊 Suggested First-Line Medicine & Care (Doctor Review):
+                    </small>
+                    <span style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontStyle: "italic" }}>
+                      Clinical Reference
+                    </span>
+                  </div>
+                  <ul className="med-list">
+                    {clinicalForm.suggestedMedicines.map((med, idx) => (
+                      <li key={idx} className="med-item">
+                        {med}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
@@ -633,7 +744,7 @@ export default function App() {
                 <div className="clinical-meta-row">
                   <span className="clinical-time">Recorded Time: {clinicalForm.timestamp}</span>
                   <span className={`urgency-badge ${clinicalForm.urgency.class}`}>
-                    Triage: {clinicalForm.urgency.level}
+                    Triage: {clinicalForm.urgency.level} ({clinicalForm.urgency.label})
                   </span>
                 </div>
 
